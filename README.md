@@ -23,6 +23,96 @@ This project investigates whether data augmentation (back-translation and paraph
 
 ---
 
+## Contents of the Zip File
+
+```text
+Group6/
+├── notebooks/
+│   ├── Hausa.ipynb             # Full augmentation pipeline for Hausa (Conditions A–D)
+│   ├── Igbo.ipynb              # Full augmentation pipeline for Igbo (Conditions A–D)
+│   └── Afrikaans.ipynb         # Full augmentation pipeline for Afrikaans (Conditions A–D)
+├── results/
+│   ├── results_hausa.txt       # Raw experiment output for Hausa
+│   ├── results_igbo.txt        # Raw experiment output for Igbo
+│   └── results_afrikaans.txt   # Raw experiment output for Afrikaans
+├── report/
+│   ├── COS760_Report.pdf       # Full project report
+│   └── COS760_Report.zip       # Report source files
+├── .gitignore
+├── requirements.txt            # Python dependencies with versions
+└── README.md
+```
+
+---
+
+## Setup Instructions
+
+### Requirements
+
+- **Python 3.11**
+- CUDA-capable GPU strongly recommended (experiments were run on Google Colab A100/T4)
+- ~15 GB free disk space (models + augmented datasets)
+
+### Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## Data Information
+
+This project uses the **BRIGHTER** dataset, publicly available on Hugging Face under a **CC-BY 4.0** licence. The dataset is downloaded automatically at runtime inside each notebook via the Hugging Face `datasets` library — no manual download is required.
+
+The three language subsets used are:
+
+| Language | HuggingFace Split | Train | Dev | Test |
+| :--- | :--- | :---: | :---: | :---: |
+| Afrikaans | `semeval2025-task11-brighter` | 1,222 | 196 | 2,130 |
+| Hausa | `semeval2025-task11-brighter` | 2,145 | 712 | 2,160 |
+| Igbo | `semeval2025-task11-brighter` | 2,880 | 958 | 2,888 |
+
+> **Note:** Do not include dataset files in the zip. They are fetched at runtime and are too large for direct inclusion.
+
+---
+
+## Running the Code
+
+### Option 1 — Google Colab (recommended)
+
+1. Upload the relevant notebook from `notebooks/` to [Google Colab](https://colab.research.google.com/).
+2. Set the runtime to **GPU** (Runtime → Change runtime type → T4 or A100).
+3. Run all cells top to bottom.
+
+### Option 2 — Local Jupyter
+
+```bash
+git clone https://github.com/<your-org>/COS760-Emotion-Analysis.git
+cd COS760-Emotion-Analysis
+pip install -r requirements.txt
+jupyter notebook notebooks/Hausa.ipynb
+```
+
+### Notebooks
+
+| Notebook | Language | Description |
+| :--- | :--- | :--- |
+| [`notebooks/Hausa.ipynb`](notebooks/Hausa.ipynb) | Hausa | Full 4-condition augmentation pipeline |
+| [`notebooks/Igbo.ipynb`](notebooks/Igbo.ipynb) | Igbo | Full 4-condition augmentation pipeline |
+| [`notebooks/Afrikaans.ipynb`](notebooks/Afrikaans.ipynb) | Afrikaans | Full 4-condition augmentation pipeline |
+
+Each notebook is self-contained and will:
+
+1. Download the BRIGHTER dataset splits from Hugging Face Hub.
+2. Generate augmented training sets (Conditions B, C, D).
+3. Fine-tune the model independently for each condition.
+4. Evaluate on the held-out test set and report macro, micro, and weighted F1.
+
+> **Tip:** Augmentation generation (NLLB-200 inference) is the most time-intensive step. Look for cells marked `# SAVE / LOAD AUGMENTED DATA` to save intermediate outputs and avoid re-running generation.
+
+---
+
 ## Experimental Conditions
 
 | Condition | Augmentation Strategy | Afrikaans | Hausa | Igbo |
@@ -69,79 +159,20 @@ Models are evaluated on held-out test sets (Afrikaans: 2,130 / Hausa: 2,160 / Ig
 
 ---
 
-## Repository Structure
-
-```text
-COS760-Emotion-Analysis/
-├── notebooks/
-│   ├── Hausa.ipynb        # Hausa: Conditions A, B, C, D
-│   ├── Igbo.ipynb         # Igbo: Conditions A, B, C, D
-│   └── Afrikaans.ipynb    # Afrikaans: Conditions A, B, C, D
-├── report/
-│   ├── COS760_Report.pdf  # Full project report
-│   └── COS760_Report.zip  # Report source files
-├── .gitignore
-├── requirements.txt       # Python dependencies
-└── README.md
-```
-
----
-
-## How to Run
-
-### Prerequisites
-
-- Python ≥ 3.9
-- CUDA-capable GPU strongly recommended (experiments run on Google Colab A100/T4)
-- ~15 GB free disk space (models + augmented datasets)
-
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/<your-org>/COS760-Emotion-Analysis.git
-cd COS760-Emotion-Analysis
-```
-
-### 2. Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### 3. Run a notebook
-
-Upload the notebook for your target language to **Google Colab**, or run locally in Jupyter:
-
-| Notebook | Language |
-| :--- | :--- |
-| [`notebooks/Hausa.ipynb`](notebooks/Hausa.ipynb) | Hausa |
-| [`notebooks/Igbo.ipynb`](notebooks/Igbo.ipynb) | Igbo |
-| [`notebooks/Afrikaans.ipynb`](notebooks/Afrikaans.ipynb) | Afrikaans |
-
-Each notebook is self-contained and will:
-
-1. Download the BRIGHTER dataset splits from Hugging Face Hub.
-2. Generate augmented training sets (Conditions B, C, D).
-3. Fine-tune the model for each condition independently.
-4. Evaluate on the held-out test set and report macro, micro, and weighted F1.
-
-> **Tip:** Augmentation generation is the most time-intensive step. Look for cells marked `# SAVE / LOAD AUGMENTED DATA` to save intermediate outputs and avoid re-running generation.
-
----
-
 ## Dependencies
 
-See [`requirements.txt`](requirements.txt) for the full list. Core packages:
+See [`requirements.txt`](requirements.txt) for the full pinned list. Core packages:
 
-| Package | Purpose |
-| :--- | :--- |
-| `transformers` | Model fine-tuning and NLLB-200 inference |
-| `datasets` | BRIGHTER dataset loading from Hugging Face Hub |
-| `torch` | PyTorch backend |
-| `scikit-learn` | F1 score computation |
-| `numpy` / `pandas` | Data manipulation |
-| `sentencepiece` | NLLB-200 tokenization |
-| `accelerate` | Hugging Face Trainer multi-GPU support |
+| Package | Version | Purpose |
+| :--- | :--- | :--- |
+| `torch` | 2.3.0 | PyTorch backend |
+| `transformers` | 4.41.0 | Model fine-tuning and NLLB-200 inference |
+| `datasets` | 2.19.0 | BRIGHTER dataset loading from Hugging Face Hub |
+| `accelerate` | 0.30.0 | Hugging Face Trainer multi-GPU support |
+| `scikit-learn` | 1.5.0 | F1 score computation |
+| `sentencepiece` | 0.2.0 | NLLB-200 tokenization |
+| `numpy` | 1.26.4 | Data manipulation |
+| `pandas` | 2.2.2 | Data manipulation |
 
 ---
 

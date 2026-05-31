@@ -1,4 +1,7 @@
 
+# Claude Code working directory
+.claude/
+
 # Python
 __pycache__/
 *.py[cod]
@@ -18,7 +21,6 @@ venv/
 runs/
 checkpoints/
 output*/
-results/
 transformers_cache/
 .cache/
 
