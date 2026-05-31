@@ -1,7 +1,3 @@
-
-# Claude Code working directory
-.claude/
-
 # Python
 __pycache__/
 *.py[cod]
