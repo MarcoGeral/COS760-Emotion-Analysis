@@ -82,7 +82,10 @@ COS760-Emotion-Analysis/
 │   └── COS760_Report.zip  # Report source files
 ├── .gitignore
 ├── requirements.txt       # Python dependencies
-└── README.md
+├── results_afrikaans.txt   # Full results and output for Afrikaans
+├── results_hausa.txt     # Full results and output for Hausa
+├── results_igbo.txt     # Full results and output for Afrikaans
+└── README.md   
 ```
 
 ---
@@ -121,7 +124,7 @@ Upload the notebook for your target language to **Google Colab**, or run locally
 Each notebook is self-contained and will:
 
 1. Download the BRIGHTER dataset splits from Hugging Face Hub.
-2. Generate augmented training sets (Conditions B, C, D).
+2. Generate augmented training sets (Conditions B, C, D). (NOTE: condition C involves using a local LLM to generate the paraphrasing data, configure API keys and LLM config (see relevant section in code) for non-local models if you do not have Ollama and the gemma4 model installed locally) 
 3. Fine-tune the model for each condition independently.
 4. Evaluate on the held-out test set and report macro, micro, and weighted F1.
 
