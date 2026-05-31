@@ -1,0 +1,198 @@
+DatasetDict({
+    train: Dataset({
+        features: ['id', 'text', 'anger', 'disgust', 'fear', 'joy', 'sadness', 'surprise', 'emotions'],
+        num_rows: 1222
+    })
+    dev: Dataset({
+        features: ['id', 'text', 'anger', 'disgust', 'fear', 'joy', 'sadness', 'surprise', 'emotions'],
+        num_rows: 196
+    })
+    test: Dataset({
+        features: ['id', 'text', 'anger', 'disgust', 'fear', 'joy', 'sadness', 'surprise', 'emotions'],
+        num_rows: 2130
+    })
+})
+{'id': 'afr_train_track_a_00001', 'text': 'die grondeienaars het die departement genader om hulp, waarna die tegniese aspekte van die die voorgestelde projek ondersoek en ontleed was.', 'anger': 0, 'disgust': 0, 'fear': 0, 'joy': 0, 'sadness': 0, 'surprise': None, 'emotions': []}
+             anger      disgust         fear          joy      sadness
+count  1222.000000  1222.000000  1222.000000  1222.000000  1222.000000
+mean      0.036007     0.009820     0.099018     0.434534     0.144845
+std       0.186383     0.098648     0.298808     0.495899     0.352088
+min       0.000000     0.000000     0.000000     0.000000     0.000000
+25%       0.000000     0.000000     0.000000     0.000000     0.000000
+50%       0.000000     0.000000     0.000000     0.000000     0.000000
+75%       0.000000     0.000000     0.000000     1.000000     0.000000
+max       1.000000     1.000000     1.000000     1.000000     1.000000
+
+raw_train_df = pd.DataFrame(dataset["train"])
+raw_train_df["text"] = [clean_text(t) for t in raw_train_df["text"]]
+
+#Surprise has a value of none, dropping from dataset
+raw_train_df = raw_train_df.drop(columns=["surprise"], errors="ignore")
+raw_train_df["neutral"] = (raw_train_df[base_emotions].fillna(0).sum(axis=1) == 0).astype(int)
+ 
+test_df_full = pd.DataFrame(dataset["test"])
+test_df_full["text"] = [clean_text(t) for t in test_df_full["text"]]
+test_df_full = test_df_full.drop(columns=["surprise"], errors="ignore")
+ 
+moved_to_train = test_df_full.sample(n=800, random_state=42)
+remaining_test = test_df_full.drop(moved_to_train.index).reset_index(drop=True)
+ 
+moved_to_train = moved_to_train.copy()
+moved_to_train["neutral"] = (moved_to_train[base_emotions].fillna(0).sum(axis=1) == 0).astype(int)
+ 
+raw_train_df = pd.concat([raw_train_df, moved_to_train], ignore_index=True)
+ 
+print(f"New training size : {len(raw_train_df)}")
+print(f"New test size     : {len(remaining_test)}")
+
+New training size : 2022
+New test size     : 1330
+
+
+============================================================
+CONDITION A – Baseline: XLM-RoBERTa-large
+============================================================
+Epoch	Training Loss	Validation Loss	F1 Macro	F1 Micro	F1 Weighted
+1	0.642397	0.781172	0.000000	0.000000	0.000000
+2	0.511638	0.460237	0.504907	0.581470	0.586538
+3	0.408041	0.413437	0.512002	0.556522	0.568717
+4	0.346922	0.431102	0.546493	0.608000	0.626387
+5	0.268185	0.426706	0.527663	0.570281	0.586154
+
+Test F1 Macro: 0.5996
+Test F1 Micro: 0.6396
+Test F1 Weighted: 0.6492
+
+============================================================
+CONDITION A – Baseline: AfroXLMR-large
+============================================================
+Epoch	Training Loss	Validation Loss	F1 Macro	F1 Micro	F1 Weighted
+1	0.623229	0.705015	0.048485	0.118519	0.106245
+2	0.399257	0.462406	0.482958	0.533865	0.542893
+3	0.327792	0.472931	0.494790	0.529644	0.532565
+4	0.298908	0.377879	0.547277	0.605364	0.627266
+5	0.240585	0.377250	0.553082	0.604651	0.625511
+Test F1 Macro: 0.6333
+Test F1 Micro: 0.6550
+Test F1 Weighted: 0.6603
+
+Condition B training set size : 3030
+augmentation
+original      2022
+bt_dutch       505
+bt_english     503
+Name: count, dtype: int64
+
+============================================================
+CONDITION B – Back-translation: XLM-RoBERTa-large
+============================================================
+
+Epoch	Training Loss	Validation Loss	F1 Macro	F1 Micro	F1 Weighted
+1	0.562728	0.676141	0.000000	0.000000	0.000000
+2	0.551140	0.653788	0.095238	0.034188	0.024845
+3	0.480588	0.389537	0.404325	0.434043	0.350657
+4	0.362978	0.380907	0.494979	0.532847	0.567285
+5	0.327284	0.394446	0.526343	0.568093	0.586203
+
+Test F1 Macro: 0.5732
+Test F1 Micro: 0.5977
+Test F1 Weighted: 0.6019
+
+============================================================
+CONDITION B – Back-translation: AfroXLMR-large
+============================================================
+
+Epoch	Training Loss	Validation Loss	F1 Macro	F1 Micro	F1 Weighted
+1	0.543020	0.660417	0.041903	0.056338	0.039041
+2	0.564931	0.736749	0.086580	0.233918	0.181818
+3	0.589017	0.722321	0.000000	0.000000	0.000000
+4	0.610027	0.661787	0.022222	0.015873	0.005797
+5	0.598329	0.717763	0.000000	0.000000	0.000000
+Test F1 Macro: 0.0847
+Test F1 Micro: 0.2110
+Test F1 Weighted: 0.1635
+
+Condition C training set size : 3033
+augmentation
+original      2022
+paraphrase    1011
+Name: count, dtype: int64
+
+============================================================
+CONDITION C – Paraphrase-only: XLM-RoBERTa-large
+============================================================
+
+Epoch	Training Loss	Validation Loss	F1 Macro	F1 Micro	F1 Weighted
+1	0.643874	0.620968	0.336400	0.346863	0.279330
+2	0.406260	0.421137	0.414571	0.402116	0.320450
+3	0.370530	0.442107	0.525791	0.611570	0.630750
+4	0.221692	0.430257	0.562976	0.623482	0.634480
+5	0.216211	0.420093	0.591160	0.647059	0.654755
+
+
+============================================================
+CONDITION C – Paraphrase-only: AfroXLMR-large
+============================================================
+Epoch	Training Loss	Validation Loss	F1 Macro	F1 Micro	F1 Weighted
+1	0.630974	0.661509	0.073271	0.125000	0.122625
+2	0.510848	0.782434	0.000000	0.000000	0.000000
+3	0.610485	0.681845	0.000000	0.000000	0.000000
+4	0.584987	0.689466	0.000000	0.000000	0.000000
+5	0.585449	0.693757	0.074074	0.033058	0.019324
+
+Condition D training set size : 4041
+augmentation
+original      2022
+paraphrase    1011
+bt_dutch       505
+bt_english     503
+Name: count, dtype: int64
+
+============================================================
+CONDITION D – Combined: XLM-RoBERTa-large
+============================================================
+Epoch	Training Loss	Validation Loss	F1 Macro	F1 Micro	F1 Weighted
+1	0.585466	0.679534	0.000000	0.000000	0.000000
+2	0.482904	0.567805	0.364353	0.350877	0.317367
+3	0.382409	0.538864	0.490244	0.572770	0.570717
+4	0.280216	0.456662	0.561324	0.592593	0.601311
+5	0.244436	0.469606	0.574087	0.610879	0.618836
+
+============================================================
+CONDITION D – Combined: AfroXLMR-large
+============================================================
+Epoch	Training Loss	Validation Loss	F1 Macro	F1 Micro	F1 Weighted
+1	0.367024	0.362008	0.558599	0.621212	0.643956
+2	0.261890	0.449196	0.603506	0.663900	0.668238
+3	0.201141	0.401028	0.618299	0.674897	0.676673
+4	0.160754	0.458002	0.585716	0.658635	0.675125
+5	0.126514	0.449709	0.621089	0.685714	0.693889
+
+
+===============================================================================
+AFRIKAANS – FULL RESULTS SUMMARY
+===============================================================================
+Condition                Model                   F1 Macro  F1 Micro F1 Weighted
+-------------------------------------------------------------------------------
+A – Baseline             XLM-RoBERTa-large         0.5996    0.6396      0.6492
+A – Baseline             AfroXLMR-large            0.6333    0.6550      0.6603
+B – Back-translation     XLM-RoBERTa-large         0.5732    0.5977      0.6019
+B – Back-translation     AfroXLMR-large            0.0847    0.2110      0.1635
+C – Paraphrase-only      XLM-RoBERTa-large         0.6768    0.7074      0.7134
+C – Paraphrase-only      AfroXLMR-large            0.0043    0.0049      0.0045
+D – Combined             XLM-RoBERTa-large         0.6531    0.6802      0.6862
+D – Combined             AfroXLMR-large            0.7302    0.7632      0.7661
+-------------------------------------------------------------------------------
+
+Δ F1 Macro relative to XLM-RoBERTa Baseline:
+-------------------------------------------------------------------------------
+A – Baseline             XLM-RoBERTa-large       +0.0000
+A – Baseline             AfroXLMR-large          +0.0337
+B – Back-translation     XLM-RoBERTa-large       -0.0264
+B – Back-translation     AfroXLMR-large          -0.5149
+C – Paraphrase-only      XLM-RoBERTa-large       +0.0772
+C – Paraphrase-only      AfroXLMR-large          -0.5953
+D – Combined             XLM-RoBERTa-large       +0.0535
+D – Combined             AfroXLMR-large          +0.1306
+-------------------------------------------------------------------------------
+
