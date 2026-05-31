@@ -1,0 +1,35 @@
+# Claude Code working directory
+.claude/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.env
+venv/
+.venv/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Model checkpoints & Hugging Face cache
+*.pt
+*.bin
+*.safetensors
+runs/
+checkpoints/
+output*/
+results/
+transformers_cache/
+.cache/
+
+# Data (downloaded at runtime)
+data/
+*.csv
+*.tsv
+*.jsonl
+
+# OS
+.DS_Store
+Thumbs.db

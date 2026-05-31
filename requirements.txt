@@ -1,0 +1,17 @@
+# Core ML / NLP
+torch
+transformers
+datasets
+accelerate
+sentencepiece
+protobuf
+
+# Evaluation
+scikit-learn
+numpy
+pandas
+
+# Notebook utilities
+jupyter
+ipywidgets
+tqdm
