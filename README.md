@@ -178,6 +178,3 @@ See [`requirements.txt`](requirements.txt) for the full pinned list. Core packag
 
 ---
 
-## License & Attribution
-
-Submitted in partial fulfilment of the requirements for **COS 760** at the **University of Pretoria**. Dataset usage complies with the BRIGHTER benchmark CC-BY 4.0 licence.
