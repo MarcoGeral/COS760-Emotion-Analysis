@@ -1,6 +1,6 @@
 # Multilabel Emotion Classification in Low-Resource African Languages using Data Augmentation
 
-This project investigates whether data augmentation (back-translation and paraphrasing) can improve multilabel emotion classification for low-resource African languages. Two pretrained multilingual models — **XLM-RoBERTa-large** and **AfroXLMR-large** — are fine-tuned across four experimental data conditions on **Afrikaans**, **Hausa**, and **Igbo** using the BRIGHTER benchmark.
+This project investigates whether data augmentation (back-translation and paraphrasing) can improve multilabel emotion classification for low-resource African languages. Two pretrained multilingual models, **XLM-RoBERTa-large** and **AfroXLMR-large**, are fine-tuned across four experimental data conditions on **Afrikaans**, **Hausa**, and **Igbo** using the BRIGHTER benchmark.
 
 > **Full report:** [`COS760_Report.pdf`](report/COS760_Report.pdf)
 
