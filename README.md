@@ -28,9 +28,9 @@ This project investigates whether data augmentation (back-translation and paraph
 ```text
 Group6/
 ├── notebooks/
-│   ├── Hausa.ipynb             # Full augmentation pipeline for Hausa (Conditions A–D)
-│   ├── Igbo.ipynb              # Full augmentation pipeline for Igbo (Conditions A–D)
-│   └── Afrikaans.ipynb         # Full augmentation pipeline for Afrikaans (Conditions A–D)
+│   ├── Hausa.ipynb             # Full augmentation pipeline for Hausa (Conditions A-D)
+│   ├── Igbo.ipynb              # Full augmentation pipeline for Igbo (Conditions A-D)
+│   └── Afrikaans.ipynb         # Full augmentation pipeline for Afrikaans (Conditions A-D)
 ├── results/
 │   ├── results_hausa.txt       # Raw experiment output for Hausa
 │   ├── results_igbo.txt        # Raw experiment output for Igbo
@@ -109,7 +109,9 @@ Each notebook is self-contained and will:
 3. Fine-tune the model independently for each condition.
 4. Evaluate on the held-out test set and report macro, micro, and weighted F1.
 
-> **Tip:** Augmentation generation (NLLB-200 inference) is the most time-intensive step. Look for cells marked `# SAVE / LOAD AUGMENTED DATA` to save intermediate outputs and avoid re-running generation.
+> **Condition C (Paraphrasing) note:** This condition uses a local LLM for paraphrase generation. By default it expects **Ollama** with the **gemma4** model installed locally. If you do not have Ollama set up, configure your API keys and LLM settings in the relevant notebook section before running.
+
+> **Tip:** Augmentation generation is the most time-intensive step. Look for cells marked `# SAVE / LOAD AUGMENTED DATA` to save intermediate outputs and avoid re-running generation.
 
 ---
 
@@ -176,3 +178,6 @@ See [`requirements.txt`](requirements.txt) for the full pinned list. Core packag
 
 ---
 
+## License & Attribution
+
+Submitted in partial fulfilment of the requirements for **COS 760** at the **University of Pretoria**. Dataset usage complies with the BRIGHTER benchmark CC-BY 4.0 licence.
